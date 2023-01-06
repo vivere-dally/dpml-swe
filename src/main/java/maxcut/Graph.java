@@ -20,8 +20,18 @@ public class Graph {
         edges.add(new Edge(u, v, w));
     }
 
+    public void addUndirectedEdge(int u, int v, int w) {
+        edges.add(new Edge(u, v, w));
+        edges.add(new Edge(v, u, w));
+    }
+
     public void addEdge(int u, int v) {
         edges.add(new Edge(u, v));
+    }
+
+    public void addUndirectedEdge(int u, int v) {
+        edges.add(new Edge(u, v));
+        edges.add(new Edge(v, u));
     }
 
     public void addEdge(Edge edge) {

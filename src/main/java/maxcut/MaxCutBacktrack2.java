@@ -3,7 +3,7 @@ package maxcut;
 import java.util.HashSet;
 import java.util.Set;
 
-public class MaxCutBacktrack {
+public class MaxCutBacktrack2 {
     private final Graph graph;
 
     private final Set<Integer> S = new HashSet<>();
@@ -13,7 +13,7 @@ public class MaxCutBacktrack {
     private int[] maxCutAssignment;
     private int maxCut = 0;
 
-    public MaxCutBacktrack(Graph graph) {
+    public MaxCutBacktrack2(Graph graph) {
         this.graph = graph;
     }
 
