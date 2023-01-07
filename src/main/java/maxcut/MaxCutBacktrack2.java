@@ -4,7 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class MaxCutBacktrack2 {
-    private final Graph graph;
+    private final int n;
+    private final boolean[][] adjacencyMatrix;
 
     private final Set<Integer> S = new HashSet<>();
     private final Set<Integer> T = new HashSet<>();
@@ -13,8 +14,9 @@ public class MaxCutBacktrack2 {
     private int[] maxCutAssignment;
     private int maxCut = 0;
 
-    public MaxCutBacktrack2(Graph graph) {
-        this.graph = graph;
+    public MaxCutBacktrack2(int n, boolean[][] adjacencyMatrix) {
+        this.n = n;
+        this.adjacencyMatrix = adjacencyMatrix;
     }
 
     private boolean isValid() {
@@ -25,9 +27,9 @@ public class MaxCutBacktrack2 {
     }
 
     private void updateCut() {
-        if (E.size() > maxCut) {
-            maxCut = E.size();
-            maxCutAssignment = new int[graph.getN()];
+        if (E.size() / 2 > maxCut) {
+            maxCut = E.size() / 2;
+            maxCutAssignment = new int[n];
             for (final int var : S) {
                 maxCutAssignment[var] = -1;
             }
@@ -39,27 +41,36 @@ public class MaxCutBacktrack2 {
     }
 
     private void backtrack() {
-        if (S.size() + T.size() == graph.getN() && isValid()) {
+        if (S.size() + T.size() == n && isValid()) {
             updateCut();
         }
 
-        for (final Edge edge : graph.getEdges()) {
-            if (E.contains(edge)) {
-                continue;
-            }
+        for (int i = 0; i < n; i += 1) {
+            for (int j = i + 1; j < n; j += 1) {
+                if (!adjacencyMatrix[i][j]) {
+                    continue;
+                }
 
-            E.add(edge);
-            S.add(edge.u());
-            T.add(edge.v());
-            backtrack();
-            T.remove(edge.v());
-            S.remove(edge.u());
-            E.remove(edge);
+                final Edge e1 = new Edge(i, j), e2 = new Edge(j, i);
+                if (E.contains(e1) || E.contains(e2)) {
+                    continue;
+                }
+
+                E.add(e1);
+                E.add(e2);
+                S.add(i);
+                T.add(j);
+                backtrack();
+                T.remove(j);
+                S.remove(i);
+                E.remove(e2);
+                E.remove(e1);
+            }
         }
     }
 
     public MaxCutSolution solve() {
         backtrack();
-        return new MaxCutSolution(graph.getN(), maxCut, maxCutAssignment);
+        return new MaxCutSolution(n, maxCut, maxCutAssignment);
     }
 }

@@ -25,8 +25,17 @@ public class MaxCutBacktrack {
     }
 
     private void updateCut() {
-        if (E.size() > maxCut) {
-            maxCut = E.size();
+        int cut = 0;
+        for (final int u : S) {
+            for (final int v : T) {
+                if (graph.areConnected(u, v)) {
+                    cut += 1;
+                }
+            }
+        }
+
+        if (cut > maxCut) {
+            maxCut = cut;
             maxCutAssignment = new int[graph.getN()];
             for (final int var : S) {
                 maxCutAssignment[var] = -1;
@@ -44,16 +53,27 @@ public class MaxCutBacktrack {
         }
 
         for (final Edge edge : graph.getEdges()) {
-            if (E.contains(edge)) {
+            if (E.contains(edge) ||
+                    (S.contains(edge.u()) && S.contains(edge.v())) ||
+                    (T.contains(edge.u()) && T.contains(edge.v()))) {
                 continue;
             }
 
             E.add(edge);
+
             S.add(edge.u());
             T.add(edge.v());
             backtrack();
             T.remove(edge.v());
             S.remove(edge.u());
+
+            // Due to the fact that the graph is undirected, we can build a solution using the other direction.
+            S.add(edge.v());
+            T.add(edge.u());
+            backtrack();
+            T.remove(edge.u());
+            S.remove(edge.v());
+
             E.remove(edge);
         }
     }

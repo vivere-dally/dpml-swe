@@ -6,32 +6,25 @@ import java.util.Objects;
 
 public class Graph {
     private final int n;
+    private final boolean[][] adjacencyMatrix;
     private final List<Edge> edges = new ArrayList<>();
 
-    public Graph(int n) {
+    public Graph(final int n) {
         this.n = n;
+        adjacencyMatrix = new boolean[n][n];
     }
 
     public int getN() {
         return n;
     }
 
-    public void addEdge(int u, int v, int w) {
+    public void addEdge(final int u, final int v, final int w) {
         edges.add(new Edge(u, v, w));
     }
 
-    public void addUndirectedEdge(int u, int v, int w) {
-        edges.add(new Edge(u, v, w));
-        edges.add(new Edge(v, u, w));
-    }
-
-    public void addEdge(int u, int v) {
+    public void addEdge(final int u, final int v) {
         edges.add(new Edge(u, v));
-    }
-
-    public void addUndirectedEdge(int u, int v) {
-        edges.add(new Edge(u, v));
-        edges.add(new Edge(v, u));
+        adjacencyMatrix[u][v] = adjacencyMatrix[v][u] = true;
     }
 
     public void addEdge(Edge edge) {
@@ -40,6 +33,10 @@ public class Graph {
 
     public List<Edge> getEdges() {
         return edges;
+    }
+
+    public boolean areConnected(final int u, final int v) {
+        return adjacencyMatrix[u][v] || adjacencyMatrix[v][u];
     }
 
     @Override
@@ -55,7 +52,7 @@ public class Graph {
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Graph graph = (Graph) o;

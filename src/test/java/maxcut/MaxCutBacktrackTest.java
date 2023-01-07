@@ -45,6 +45,31 @@ class MaxCutBacktrackTest {
         final MaxCutSolution sol = maxCut.solve();
 
         assertNotNull(sol.getPartitions());
-        assertEquals(6, sol.getCost());
+        assertEquals(7, sol.getCost());
+    }
+
+    @Test
+    void solve3() {
+        final Graph graph = new Graph(4);
+        graph.addEdge(0, 1);
+        graph.addEdge(1, 2);
+        graph.addEdge(1, 3);
+
+        final MaxCutSolution sol = new MaxCutBacktrack(graph).solve();
+
+        assertEquals(3, sol.getCost());
+    }
+
+    @Test
+    void solve4() {
+        final Graph graph = new Graph(4);
+        graph.addEdge(0, 1);
+        graph.addEdge(0, 2);
+        graph.addEdge(1, 2);
+        graph.addEdge(2, 3);
+
+        final MaxCutSolution sol = new MaxCutBacktrack(graph).solve();
+
+        assertEquals(3, sol.getCost());
     }
 }
