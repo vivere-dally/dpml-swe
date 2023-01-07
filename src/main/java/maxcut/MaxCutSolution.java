@@ -1,18 +1,18 @@
 package maxcut;
 
 public class MaxCutSolution {
-    private final int n;
+    private final Graph graph;
     private final int cost;
     private final int[] partitions;
 
-    public MaxCutSolution(int n, int cost, int[] partitions) {
-        this.n = n;
+    public MaxCutSolution(Graph graph, int cost, int[] partitions) {
+        this.graph = graph;
         this.cost = cost;
         this.partitions = partitions;
     }
 
-    public int getN() {
-        return n;
+    public Graph getGraph() {
+        return graph;
     }
 
     public int getCost() {

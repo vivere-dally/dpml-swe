@@ -7,11 +7,7 @@ import java.util.Set;
 /**
  * Class that solves the MaxCut problem formulated as a CSP by using backtracking.
  */
-public class MaxCutBacktrack {
-    /**
-     * Represents the given graph for which we need to find the max cut.
-     */
-    private final Graph graph;
+public class MaxCutBacktrack extends MaxCut {
 
     /**
      * Represents one set of a partition
@@ -26,22 +22,10 @@ public class MaxCutBacktrack {
      */
     private final Set<Edge> E = new HashSet<>();
 
-    /**
-     * Represents a solution to the max cut problem represented as a variable assignment array where a value of:
-     * - -1 means that the vertex at that index is part of set S
-     * - 1 means that the vertex at that index is part of set T
-     * <p>
-     * There can be a multiple cuts, however this variable will keep the assignment of a maximum cut.
-     */
-    private int[] maxCutAssignment;
-    /**
-     * Keeps track of the count of edges that are in the maximum cut.
-     */
-    private int maxCut = 0;
-
     public MaxCutBacktrack(Graph graph) {
-        this.graph = graph;
+        super(graph);
     }
+
 
     /**
      * Checks if a value assignment is valid by verifying that no vertex is present in both sets.
@@ -99,8 +83,8 @@ public class MaxCutBacktrack {
         for (int i = index; i < graph.getEdges().size(); i += 1) {
             final Edge edge = graph.getEdges().get(i);
 
-            // No reason to consider this edge again.
             if (E.contains(edge)) {
+                // No reason to consider this edge again.
                 continue;
             }
 
@@ -124,8 +108,8 @@ public class MaxCutBacktrack {
         }
     }
 
-    public MaxCutSolution solve() {
+    @Override
+    protected void internalSolve() {
         backtrack(0);
-        return new MaxCutSolution(graph.getN(), maxCut, maxCutAssignment);
     }
 }
