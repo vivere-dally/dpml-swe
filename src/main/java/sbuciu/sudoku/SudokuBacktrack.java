@@ -22,7 +22,7 @@ public class SudokuBacktrack extends Sudoku {
                     return true;
                 }
 
-                assert board.clear(pos);
+                board.clear(pos);
             }
         }
 

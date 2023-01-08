@@ -7,6 +7,12 @@ import net.sourceforge.argparse4j.inf.Namespace;
 import sbuciu.maxcut.*;
 import sbuciu.maxcut.io.GraphIO;
 import sbuciu.maxcut.model.MaxCutSolution;
+import sbuciu.sudoku.Sudoku;
+import sbuciu.sudoku.SudokuBacktrack;
+import sbuciu.sudoku.SudokuPRNodeConsistency;
+import sbuciu.sudoku.SudokuSSForwardCheck;
+import sbuciu.sudoku.model.Board;
+import sbuciu.sudoku.model.SudokuSolution;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -23,11 +29,17 @@ public class DPML {
                 .setDefault("maxcut")
                 .help("Problem to solve.");
         parser.addArgument("-a", "--alg", "--algorithm")
-                .choices("backtrack", "pruning", "arc-consistent", "forward-check")
+                .choices("backtrack", "pruning", "node-consistent", "arc-consistent", "forward-check")
                 .help("The algorithm variation to use.");
         parser.addArgument("-p", "--path")
-                .setDefault("src/main/resources/G3")
-                .help("Path to a graph file. It is mandatory that it respects the format from the Stanford graphs.\nSee http://web.stanford.edu/~yyye/yyye/Gset/.");
+                .setDefault("D:\\ICA\\DPML\\software\\dpml-swe\\data\\S3")
+                .help("Path to an input file. It can either be a Sudoku puzzle file, or a Graph file."
+                        .concat(System.lineSeparator())
+                        .concat("In the case of sudoku, the input needs to be a CSV of a 9x9 board with values from 0 to 9, where 0 represents an empty cell.")
+                        .concat(System.lineSeparator())
+                        .concat("The graph needs to follow the format of the Stanford graphs. See http://web.stanford.edu/~yyye/yyye/Gset/.")
+                        .concat(System.lineSeparator())
+                        .concat("The jar comes with some default input files: use src/main/resources/<file> where <file> is: G1,G2,G3 for MaxCut, and S1,S2,S3 for Sudoku."));
 
         Namespace ns = null;
         try {
@@ -40,6 +52,25 @@ public class DPML {
         String path = ns.getString("path");
         switch (ns.getString("problem")) {
             case "sudoku":
+                Sudoku sudoku;
+                switch (ns.getString("alg")) {
+                    case "backtrack":
+                        sudoku = new SudokuBacktrack(Board.read(path));
+                        break;
+                    case "node-consistent":
+                        sudoku = new SudokuPRNodeConsistency(Board.read(path));
+                        break;
+                    case "forward-check":
+                        sudoku = new SudokuSSForwardCheck(Board.read(path));
+                        break;
+                    default:
+                        throw new IllegalArgumentException("Unsupported algorithm");
+                }
+
+                System.out.printf("Running %s Maximum Cut %n", ns.getString("alg"));
+                final SudokuSolution sudokuSolution = sudoku.solve();
+                System.out.println("Solution\n" + sudokuSolution.encode());
+
                 break;
             case "maxcut":
                 MaxCut maxCut;

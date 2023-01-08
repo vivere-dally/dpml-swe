@@ -1,4 +1,8 @@
-sbuciu\maxcut\MaxCutSSForwardCheckTest.class
+sbuciu\sudoku\SudokuBacktrackTest.class
+sbuciu\sudoku\SudokuSSForwardCheckTest.class
 sbuciu\maxcut\MaxCutPRPruningTest.class
 sbuciu\maxcut\MaxCutPRArcConsistentTest.class
+sbuciu\maxcut\MaxCutSSForwardCheckTest.class
+sbuciu\sudoku\SudokuExamples.class
 sbuciu\maxcut\MaxCutBacktrackTest.class
+sbuciu\sudoku\SudokuPRNodeConsistencyTest.class
