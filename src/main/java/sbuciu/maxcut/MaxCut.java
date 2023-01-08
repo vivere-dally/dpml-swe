@@ -3,7 +3,6 @@ package sbuciu.maxcut;
 import sbuciu.maxcut.model.Graph;
 import sbuciu.maxcut.model.MaxCutSolution;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -82,6 +81,13 @@ public abstract class MaxCut {
 
     protected abstract void internalSolve();
 
+    /**
+     * Logs the current backtracking depth and the current solution built.
+     *
+     * @param depth - the backtracking depth
+     * @param S     - one set of the maxcut partition
+     * @param T     - second set of the maxcut partition
+     */
     protected void lbt(final int depth, final Set<Integer> S, final Set<Integer> T) {
         final StringBuilder bob = new StringBuilder();
         for (int i = 0; i < depth; i += 1) {
@@ -114,6 +120,11 @@ public abstract class MaxCut {
         l(bob.append("}").toString());
     }
 
+    /**
+     * Logs a message along with the elapsed time since the algorithm started.
+     *
+     * @param s - the message to be logged
+     */
     protected void l(final String s) {
         final long elapsed = (System.nanoTime() - startTime) / 1_000_000;
         System.out.println("elapsed " + elapsed + "ms: " + s);

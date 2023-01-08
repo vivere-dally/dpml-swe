@@ -42,6 +42,7 @@ public class MaxCutPRArcConsistent extends MaxCut {
 
         final Set<Integer> S = new HashSet<>(), T = new HashSet<>();
         for (int i = 0; i < this.graph.getN(); i += 1) {
+            // Vertex i can be in either set
             S.add(i);
             T.add(i);
         }
@@ -54,6 +55,7 @@ public class MaxCutPRArcConsistent extends MaxCut {
 
                     for (int i = 0; i < this.graph.getN(); i += 1) {
                         if (this.graph.areConnected(i, item.edge.u())) {
+                            // The domain changed, so we add all arcs where u is on the right side.
                             agenda.add(new QueueItem(new Edge(i, item.edge.u()), false));
                         }
                     }
@@ -67,6 +69,7 @@ public class MaxCutPRArcConsistent extends MaxCut {
 
                 for (int i = 0; i < this.graph.getN(); i += 1) {
                     if (this.graph.areConnected(i, item.edge.v())) {
+                        // The domain changed, so we add all arcs where v is on the right side.
                         agenda.add(new QueueItem(new Edge(i, item.edge.v()), true));
                     }
                 }

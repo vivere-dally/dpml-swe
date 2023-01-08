@@ -26,7 +26,7 @@ public class DPML {
                 .choices("backtrack", "pruning", "arc-consistent", "forward-check")
                 .help("The algorithm variation to use.");
         parser.addArgument("-p", "--path")
-                .setDefault("src/main/resources/G2")
+                .setDefault("src/main/resources/G3")
                 .help("Path to a graph file. It is mandatory that it respects the format from the Stanford graphs.\nSee http://web.stanford.edu/~yyye/yyye/Gset/.");
 
         Namespace ns = null;

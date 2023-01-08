@@ -28,6 +28,12 @@ public class MaxCutPRPruning extends MaxCut {
         super(graph);
     }
 
+    /**
+     * Checks if we can consider the edge for the solution
+     *
+     * @param edge - the edge considered for pruning
+     * @return - true if the edge violates the existing constraints, false otherwise
+     */
     private boolean canPrune(final Edge edge) {
         return S.contains(edge.v()) || T.contains(edge.u());
     }
