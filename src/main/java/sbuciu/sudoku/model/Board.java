@@ -92,12 +92,21 @@ public class Board {
         return bob.toString();
     }
 
+    /**
+     * Fill board with static value EMPTY
+     */
     private void initBoard() {
         for (int i = 0; i < N; i += 1) {
             Arrays.fill(board[i], EMPTY);
         }
     }
 
+    /**
+     * Validate pos and return the value at that cell. If the pos is invalid, Empty is returned.
+     *
+     * @param pos - pos of the cell
+     * @return the value in the cell
+     */
     public short at(final Pos pos) {
         if (pos.noPos || pos.r < 0 || pos.r >= N || pos.c < 0 || pos.c >= N) {
             return EMPTY;
@@ -106,6 +115,11 @@ public class Board {
         return board[pos.r][pos.c];
     }
 
+    /**
+     * Find the top-leftmost empty cell
+     *
+     * @return the top-leftmost empty cell
+     */
     public Pos findEmptyPos() {
         for (short r = 0; r < N; r += 1) {
             for (short c = 0; c < N; c += 1) {
@@ -118,6 +132,14 @@ public class Board {
         return Pos.noPos();
     }
 
+    /**
+     * Given a position and a value, check if any of the row-col-square constraints is violated.
+     * If no constraint is violated, then board is updated.
+     *
+     * @param pos   - the position where we need to set the value
+     * @param value - the value to set
+     * @return true if no constraint is violated, false otherwise.
+     */
     public boolean commit(final Pos pos, short value) {
         // Check if position is valid
         if (pos.noPos || at(pos) != EMPTY) {
@@ -146,6 +168,12 @@ public class Board {
         return true;
     }
 
+    /**
+     * Clear the cell at the given position.
+     *
+     * @param pos - position of the cell to clear
+     * @return false if the position is invalid, false otherwise.
+     */
     public boolean clear(final Pos pos) {
         if (pos.noPos) {
             return false;

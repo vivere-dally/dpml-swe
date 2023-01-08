@@ -11,6 +11,9 @@ import java.util.Set;
 import static sbuciu.sudoku.model.Board.*;
 import static sbuciu.sudoku.model.Board.M;
 
+/**
+ * Class that solves the Sudoku problem formulated as a CSP by using forward checking.
+ */
 public class SudokuSSForwardCheck extends Sudoku {
 
     public SudokuSSForwardCheck(Board board) {
@@ -18,12 +21,21 @@ public class SudokuSSForwardCheck extends Sudoku {
         initConstraints();
     }
 
+    /**
+     * After a commit, remove the value based on the row-column-square constraints from the available domains.
+     * @param constraints - matrix of domains
+     * @param r - the row of the cell committed
+     * @param c - the row of the cell committed
+     * @param value - the value of the cell committed
+     */
     private void commit(final List<List<Set<Short>>> constraints, final int r, final int c, final short value) {
+        // Remove values row and column wise.
         for (int i = 0; i < N; i += 1) {
             constraints.get(r).get(i).remove(value);
             constraints.get(i).get(c).remove(value);
         }
 
+        // Remove values in the square
         final int sqr = r / M, sqc = c / M;
         for (int i = sqr * M; i < (sqr + 1) * M; i += 1) {
             for (int j = sqc * M; j < (sqc + 1) * M; j += 1) {
@@ -32,6 +44,10 @@ public class SudokuSSForwardCheck extends Sudoku {
         }
     }
 
+
+    /**
+     * Compute the domains based on the initial board values.
+     */
     private List<List<Set<Short>>> initConstraints() {
         final List<List<Set<Short>>> constraints = new ArrayList<>(N);
 
@@ -62,6 +78,11 @@ public class SudokuSSForwardCheck extends Sudoku {
         return constraints;
     }
 
+    /**
+     * Create a matrix clone of the available domains
+     * @param constraints - matrix of domains
+     * @return clone of constraints
+     */
     private List<List<Set<Short>>> clone(final List<List<Set<Short>>> constraints) {
         final List<List<Set<Short>>> cc = new ArrayList<>(N);
         for (final List<Set<Short>> row : constraints) {
@@ -83,17 +104,22 @@ public class SudokuSSForwardCheck extends Sudoku {
             return true;
         }
 
+        // We iterate only available domain
         for (final short value : constraints.get(pos.r).get(pos.c)) {
+            // Check if the value can be used for that cell
             if (board.commit(pos, value)) {
                 lbt(depth, pos, board.getBoard()[pos.r]);
 
+                // Create a clone and update the domain
                 final List<List<Set<Short>>> cConstraints = clone(constraints);
                 commit(cConstraints, pos.r, pos.c, value);
 
+                // Recursive call using the updated domain
                 if (backtrack(depth + 1, cConstraints)) {
                     return true;
                 }
 
+                // No solution found for the selected value, we need to reset the cell.
                 board.clear(pos);
             }
         }

@@ -7,6 +7,9 @@ import sbuciu.sudoku.model.SudokuSolution;
 import java.util.Arrays;
 
 public abstract class Sudoku {
+    /**
+     * Represents the given Sudoku board that we need to solve.
+     */
     protected final Board board;
 
     private long startTime;
