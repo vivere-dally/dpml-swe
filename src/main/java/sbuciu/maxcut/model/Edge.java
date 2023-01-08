@@ -1,4 +1,4 @@
-package maxcut;
+package sbuciu.maxcut.model;
 
 import java.util.Objects;
 
@@ -29,6 +29,10 @@ public class Edge {
 
     public int w() {
         return w;
+    }
+
+    public Edge reversed() {
+        return new Edge(v, u, w);
     }
 
     @Override

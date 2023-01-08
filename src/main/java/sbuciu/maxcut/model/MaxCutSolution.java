@@ -1,4 +1,4 @@
-package maxcut;
+package sbuciu.maxcut.model;
 
 public class MaxCutSolution {
     private final Graph graph;

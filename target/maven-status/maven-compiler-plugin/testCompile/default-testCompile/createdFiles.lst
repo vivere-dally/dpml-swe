@@ -1,0 +1,4 @@
+sbuciu\maxcut\MaxCutSSForwardCheckTest.class
+sbuciu\maxcut\MaxCutPRPruningTest.class
+sbuciu\maxcut\MaxCutPRArcConsistentTest.class
+sbuciu\maxcut\MaxCutBacktrackTest.class

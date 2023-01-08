@@ -1,0 +1,11 @@
+sbuciu\maxcut\MaxCut.class
+sbuciu\maxcut\model\Edge.class
+sbuciu\maxcut\io\GraphIO.class
+sbuciu\maxcut\MaxCutSSForwardCheck.class
+sbuciu\maxcut\model\Graph.class
+sbuciu\maxcut\MaxCutPRArcConsistent$QueueItem.class
+sbuciu\DPML.class
+sbuciu\maxcut\MaxCutPRArcConsistent.class
+sbuciu\maxcut\model\MaxCutSolution.class
+sbuciu\maxcut\MaxCutBacktrack.class
+sbuciu\maxcut\MaxCutPRPruning.class

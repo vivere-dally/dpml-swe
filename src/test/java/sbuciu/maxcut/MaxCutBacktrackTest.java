@@ -1,11 +1,12 @@
-package maxcut;
+package sbuciu.maxcut;
 
+import sbuciu.maxcut.model.Graph;
+import sbuciu.maxcut.model.MaxCutSolution;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class MaxCutBacktrackTest {
-
 
     @Test
     void solve1() {
@@ -18,10 +19,8 @@ class MaxCutBacktrackTest {
         graph.addEdge(2, 5);
         graph.addEdge(3, 4);
         graph.addEdge(3, 5);
-        final MaxCutBacktrack maxCut = new MaxCutBacktrack(graph);
 
-
-        final MaxCutSolution sol = maxCut.solve();
+        final MaxCutSolution sol = new MaxCutBacktrack(graph).solve();
 
         assertNotNull(sol.getPartitions());
         assertEquals(8, sol.getCost());
@@ -39,10 +38,8 @@ class MaxCutBacktrackTest {
         graph.addEdge(3, 4);
         graph.addEdge(3, 5);
         graph.addEdge(4, 5);
-        final MaxCutBacktrack maxCut = new MaxCutBacktrack(graph);
 
-
-        final MaxCutSolution sol = maxCut.solve();
+        final MaxCutSolution sol = new MaxCutBacktrack(graph).solve();
 
         assertNotNull(sol.getPartitions());
         assertEquals(7, sol.getCost());
