@@ -4,35 +4,43 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Board {
     public static final short EMPTY = 0;
     public static final short N = 9;
-    public static final short NH = N / 2;
+    public static final short M = N / 3;
 
-    private final short[][] board;
+    private final short[][] board = new short[N][N];
     private final List<List<Set<Short>>> constraints = new ArrayList<>();
     private int constraintCount = N * N * N;
 
-    private Board(short[][] board) {
+    public Board(short[][] board) {
         if (board.length != N || board[0].length != N) {
             throw new IllegalArgumentException(String.format("The board does not represent a %dx%d sudoku board", N, N));
         }
 
-        for (final short[] row : board) {
-            for (final short cell : row) {
-                if (cell != EMPTY && (cell < 1 || cell > 9)) {
+        initBoard();
+        initConstraints();
+
+        for (short r = 0; r < N; r += 1) {
+            for (short c = 0; c < N; c += 1) {
+                if (board[r][c] == EMPTY) {
+                    continue;
+                }
+
+                // check value range
+                if (board[r][c] < 1 && board[r][c] > 9) {
+                    throw new IllegalArgumentException("Illegal value found on board");
+                }
+
+                // check if we can commit the value
+                if (!commit(new Pos(r, c), board[r][c])) {
                     throw new IllegalArgumentException("Illegal value found on board");
                 }
             }
         }
 
-        this.board = board;
-        initConstraints();
     }
 
     public static Board read(String path) {
@@ -87,6 +95,12 @@ public class Board {
         return bob.toString();
     }
 
+    private void initBoard() {
+        for (int i = 0; i < N; i += 1) {
+            Arrays.fill(board[i], EMPTY);
+        }
+    }
+
     private void initConstraints() {
         final Set<Short> values = new HashSet<>();
         for (short val = 1; val <= N; val += 1) {
@@ -124,27 +138,35 @@ public class Board {
     }
 
     public boolean commit(final Pos pos, short value) {
-        // Check if position is and the board is empty
+        // Check if position is valid
         if (pos.noPos || at(pos) != EMPTY) {
             return false;
         }
 
-//        if (!constraints.get(pos.r).get(pos.c).contains(value)) {
-//            return false;
-//        }
+        // Based on the constraints, check if we can place the value at pos
+        if (!constraints.get(pos.r).get(pos.c).remove(value)) {
+            return false;
+        }
 
-        // Check if valid row-wise and col-wise
+        constraintCount -= 1;
+
+        // Remove the value from the row and col sets
         for (int i = 0; i < N; i += 1) {
-            if (board[pos.r][i] == value || board[i][pos.c] == value) {
-                return false;
+            if (constraints.get(pos.r).get(i).remove(value)) {
+                constraintCount -= 1;
+            }
+
+            if (constraints.get(i).get(pos.c).remove(value)) {
+                constraintCount -= 1;
             }
         }
 
-        // Check if valid in the correct (NHxNH) square
-        for (int r = 0; r < pos.r / NH; r += 1) {
-            for (int c = 0; c < pos.c / NH; c += 1) {
-                if (board[r][c] == value) {
-                    return false;
+        // Remove the value from the correct (NHxNH) square
+        final int sqr = pos.r / M, sqc = pos.c / M;
+        for (int r = sqr * M; r < (sqr + 1) * M; r += 1) {
+            for (int c = sqc * M; c < (sqc + 1) * M; c += 1) {
+                if (constraints.get(r).get(c).remove(value)) {
+                    constraintCount -= 1;
                 }
             }
         }
@@ -152,5 +174,52 @@ public class Board {
         // Commit
         board[pos.r][pos.c] = value;
         return true;
+    }
+
+    public boolean clear(final Pos pos) {
+        if (pos.noPos) {
+            return false;
+        }
+
+        final short value = at(pos);
+        if (value == EMPTY) {
+            return true;
+        }
+
+        // Add the value on row and col
+        for (int i = 0; i < N; i += 1) {
+            if (constraints.get(pos.r).get(i).add(value)) {
+                constraintCount += 1;
+            }
+
+            if (constraints.get(i).get(pos.c).add(value)) {
+                constraintCount += 1;
+            }
+        }
+
+        // Add value in square
+        final int sqr = pos.r / M, sqc = pos.c / M;
+        for (int r = sqr * M; r < (sqr + 1) * M; r += 1) {
+            for (int c = sqc * M; c < (sqc + 1) * M; c += 1) {
+                if (constraints.get(r).get(c).add(value)) {
+                    constraintCount += 1;
+                }
+            }
+        }
+
+        board[pos.r][pos.c] = EMPTY;
+        return true;
+    }
+
+    public int getConstraintCount() {
+        return constraintCount;
+    }
+
+    public List<List<Set<Short>>> getConstraints() {
+        return constraints;
+    }
+
+    public short[][] getBoard() {
+        return board;
     }
 }

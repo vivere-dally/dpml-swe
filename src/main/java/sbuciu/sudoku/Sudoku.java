@@ -1,12 +1,18 @@
 package sbuciu.sudoku;
 
+import sbuciu.sudoku.model.Board;
 import sbuciu.sudoku.model.SudokuSolution;
 
 public abstract class Sudoku {
+    protected final Board board;
 
     private long startTime;
 
-    protected abstract void internalSolve();
+    public Sudoku(Board board) {
+        this.board = board;
+    }
+
+    protected abstract boolean internalSolve();
 
     private long elapsed() {
         return (System.nanoTime() - startTime) / 1_000_000;
@@ -14,9 +20,9 @@ public abstract class Sudoku {
 
     public SudokuSolution solve() {
         startTime = System.nanoTime();
-        internalSolve();
+        boolean isSolved = internalSolve();
         System.out.printf("elapsed %d ms%n", elapsed());
 
-        return new SudokuSolution();
+        return new SudokuSolution(board.getBoard(), isSolved);
     }
 }
