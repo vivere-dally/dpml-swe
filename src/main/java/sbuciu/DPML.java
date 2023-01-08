@@ -38,8 +38,7 @@ public class DPML {
                         .concat("In the case of sudoku, the input needs to be a CSV of a 9x9 board with values from 0 to 9, where 0 represents an empty cell.")
                         .concat(System.lineSeparator())
                         .concat("The graph needs to follow the format of the Stanford graphs. See http://web.stanford.edu/~yyye/yyye/Gset/.")
-                        .concat(System.lineSeparator())
-                        .concat("The jar comes with some default input files: use src/main/resources/<file> where <file> is: G1,G2,G3 for MaxCut, and S1,S2,S3 for Sudoku."));
+                        .concat(System.lineSeparator()));
 
         Namespace ns = null;
         try {
