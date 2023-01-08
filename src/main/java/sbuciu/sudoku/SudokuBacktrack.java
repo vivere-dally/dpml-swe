@@ -8,8 +8,7 @@ public class SudokuBacktrack extends Sudoku {
         super(board);
     }
 
-    @Override
-    protected boolean internalSolve() {
+    private boolean backtrack(final int depth) {
         final Pos pos = board.findEmptyPos();
         if (pos.noPos) {
             // All cells are filled, a solution is found
@@ -18,14 +17,20 @@ public class SudokuBacktrack extends Sudoku {
 
         for (short value = 1; value <= Board.N; value += 1) {
             if (board.commit(pos, value)) {
-                if (internalSolve()) {
+                lbt(depth, pos, board.getBoard()[pos.r]);
+                if (backtrack(depth + 1)) {
                     return true;
                 }
 
-                board.clear(pos);
+                assert board.clear(pos);
             }
         }
 
         return false;
+    }
+
+    @Override
+    protected boolean internalSolve() {
+        return backtrack(0);
     }
 }

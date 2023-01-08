@@ -1,7 +1,10 @@
 package sbuciu.sudoku;
 
 import sbuciu.sudoku.model.Board;
+import sbuciu.sudoku.model.Pos;
 import sbuciu.sudoku.model.SudokuSolution;
+
+import java.util.Arrays;
 
 public abstract class Sudoku {
     protected final Board board;
@@ -24,5 +27,22 @@ public abstract class Sudoku {
         System.out.printf("elapsed %d ms%n", elapsed());
 
         return new SudokuSolution(board.getBoard(), isSolved);
+    }
+
+    protected void l(final String s) {
+        System.out.println("elapsed " + elapsed() + "ms: " + s);
+    }
+
+    protected void lbt(final int depth, final Pos pos, final short[] row) {
+        final StringBuilder bob = new StringBuilder();
+        for (int i = 0; i < depth; i += 1) {
+            bob.append("  ");
+        }
+
+        bob.append("depth ").append(depth + 1);
+        bob.append(" ").append(pos);
+        bob.append(" ").append(Arrays.toString(row));
+
+        l(bob.toString());
     }
 }

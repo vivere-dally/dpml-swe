@@ -12,8 +12,6 @@ public class Board {
     public static final short M = N / 3;
 
     private final short[][] board = new short[N][N];
-    private final List<List<Set<Short>>> constraints = new ArrayList<>();
-    private int constraintCount = N * N * N;
 
     public Board(short[][] board) {
         if (board.length != N || board[0].length != N) {
@@ -21,7 +19,6 @@ public class Board {
         }
 
         initBoard();
-        initConstraints();
 
         for (short r = 0; r < N; r += 1) {
             for (short c = 0; c < N; c += 1) {
@@ -101,22 +98,6 @@ public class Board {
         }
     }
 
-    private void initConstraints() {
-        final Set<Short> values = new HashSet<>();
-        for (short val = 1; val <= N; val += 1) {
-            values.add(val);
-        }
-
-        for (int r = 0; r < N; r += 1) {
-            final List<Set<Short>> row = new ArrayList<>(N);
-            for (int c = 0; c < N; c += 1) {
-                row.add(new HashSet<>(values));
-            }
-
-            constraints.add(row);
-        }
-    }
-
     public short at(final Pos pos) {
         if (pos.noPos || pos.r < 0 || pos.r >= N || pos.c < 0 || pos.c >= N) {
             return EMPTY;
@@ -143,30 +124,19 @@ public class Board {
             return false;
         }
 
-        // Based on the constraints, check if we can place the value at pos
-        if (!constraints.get(pos.r).get(pos.c).remove(value)) {
-            return false;
-        }
-
-        constraintCount -= 1;
-
-        // Remove the value from the row and col sets
+        // Check if valid row-wise and col-wise
         for (int i = 0; i < N; i += 1) {
-            if (constraints.get(pos.r).get(i).remove(value)) {
-                constraintCount -= 1;
-            }
-
-            if (constraints.get(i).get(pos.c).remove(value)) {
-                constraintCount -= 1;
+            if (board[pos.r][i] == value || board[i][pos.c] == value) {
+                return false;
             }
         }
 
-        // Remove the value from the correct (NHxNH) square
+        // Check if valid in the correct (NHxNH) square
         final int sqr = pos.r / M, sqc = pos.c / M;
         for (int r = sqr * M; r < (sqr + 1) * M; r += 1) {
             for (int c = sqc * M; c < (sqc + 1) * M; c += 1) {
-                if (constraints.get(r).get(c).remove(value)) {
-                    constraintCount -= 1;
+                if (board[r][c] == value) {
+                    return false;
                 }
             }
         }
@@ -181,42 +151,8 @@ public class Board {
             return false;
         }
 
-        final short value = at(pos);
-        if (value == EMPTY) {
-            return true;
-        }
-
-        // Add the value on row and col
-        for (int i = 0; i < N; i += 1) {
-            if (constraints.get(pos.r).get(i).add(value)) {
-                constraintCount += 1;
-            }
-
-            if (constraints.get(i).get(pos.c).add(value)) {
-                constraintCount += 1;
-            }
-        }
-
-        // Add value in square
-        final int sqr = pos.r / M, sqc = pos.c / M;
-        for (int r = sqr * M; r < (sqr + 1) * M; r += 1) {
-            for (int c = sqc * M; c < (sqc + 1) * M; c += 1) {
-                if (constraints.get(r).get(c).add(value)) {
-                    constraintCount += 1;
-                }
-            }
-        }
-
         board[pos.r][pos.c] = EMPTY;
         return true;
-    }
-
-    public int getConstraintCount() {
-        return constraintCount;
-    }
-
-    public List<List<Set<Short>>> getConstraints() {
-        return constraints;
     }
 
     public short[][] getBoard() {
