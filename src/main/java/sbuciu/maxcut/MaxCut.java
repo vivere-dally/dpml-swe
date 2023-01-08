@@ -1,9 +1,11 @@
 package sbuciu.maxcut;
 
+import sbuciu.maxcut.model.Edge;
 import sbuciu.maxcut.model.Graph;
 import sbuciu.maxcut.model.MaxCutSolution;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -118,6 +120,15 @@ public abstract class MaxCut {
         }
 
         l(bob.append("}").toString());
+    }
+
+    /**
+     * Logs the number of constraints currently considered.
+     *
+     * @param constraints - list of edges
+     */
+    protected void lcg(final Collection<Edge> constraints) {
+        l("constraints count " + constraints.size());
     }
 
     /**

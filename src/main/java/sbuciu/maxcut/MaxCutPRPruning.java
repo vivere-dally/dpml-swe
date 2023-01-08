@@ -60,6 +60,7 @@ public class MaxCutPRPruning extends MaxCut {
             }
 
             E.add(edge);
+            lcg(E);
 
             if (!canPrune(edge)) {
                 // Update the sets and make a recursive call.

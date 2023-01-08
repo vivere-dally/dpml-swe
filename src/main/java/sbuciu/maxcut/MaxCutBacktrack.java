@@ -51,6 +51,7 @@ public class MaxCutBacktrack extends MaxCut {
             }
 
             E.add(edge);
+            lcg(E);
 
             // Update the sets and make a recursive call.
             S.add(edge.u());

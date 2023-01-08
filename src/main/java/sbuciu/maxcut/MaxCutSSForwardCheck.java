@@ -54,6 +54,7 @@ public class MaxCutSSForwardCheck extends MaxCut {
         }
 
         lbt(depth, S, T);
+        lcg(edges);
         for (final Edge edge : edges) {
             S.add(edge.u());
             T.add(edge.v());

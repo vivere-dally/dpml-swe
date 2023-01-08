@@ -99,6 +99,8 @@ public class MaxCutPRArcConsistent extends MaxCut {
             }
 
             E.add(edge);
+            lcg(E);
+
             arcConsistency(depth);
             backtrack(depth + 1, i);
             E.remove(edge);
